@@ -33,14 +33,12 @@ a:hover {
 main {
   display: flex !important;
   align-items: center;
-  justify-content: center;
   min-height: 100vh;
   flex-direction: column;
-  padding: 20px;
 }
 
 #root{
-  max-width: 1250px;
+  /* max-width: 1250px; */
   min-height: 100vh;
   margin: auto;
   width: 100%;
@@ -53,7 +51,7 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  background-color:rgb(230, 245, 245) !important;
+  background-color:rgb(240, 247, 247) !important;
   width: 100% !important;
 }
 

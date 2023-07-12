@@ -5,34 +5,120 @@ import data from './data.json'
 
 import {
   Card,
-  CardHeader,
   CardBody,
-  CardFooter,
-  Stack,
   Heading,
   Button,
   Text,
   Image,
-  Container,
   HStack,
   Badge,
-  Tag
+  Tag,
+  TagLabel,
+  TagCloseButton
 } from '@chakra-ui/react'
 
 function App() {
   const [jobs, setJobs] = useState([]);
+  const [filteredJobs, setFilteredJobs] = useState([]);
+  const [filter, setFilter] = useState('');
+  const [selectedFilters, setSelectedFilters] = useState([]);
+
 
   useEffect(() => {
     const d = data
     setJobs(d)
-    console.log(data)
+    setFilteredJobs(d)
   }, []);
+
+  const handleFilterChange = (e) => {
+    const value = e.target.value.trim();
+    setFilter(value);
+    if (e.key === 'Enter' && value !== '') {
+      applyFilter(value);
+    }
+  };
+
+  const applyFilter = (value) => {
+    const filteredJobs = jobs.filter(
+      (job) =>
+        job.position.toLowerCase().includes(value.toLowerCase()) ||
+        job.languages.some((language) =>
+          language.toLowerCase().includes(value.toLowerCase())
+        )
+    );
+    setFilteredJobs(filteredJobs);
+    if (!selectedFilters.includes(value)) {
+      setSelectedFilters([...selectedFilters, value.toUpperCase()]);
+    }
+    setFilter('');
+  };
+
+  const removeFilter = (filter) => {
+    const updatedFilters = selectedFilters.filter((f) => f !== filter);
+    setSelectedFilters(updatedFilters);
+  
+    if (updatedFilters.length === 0) {
+      setFilteredJobs(jobs);
+    } else {
+      const filteredJobs = jobs.filter((job) =>
+        updatedFilters.some((f) =>
+          f === job.position || job.languages.includes(f)
+        )
+      );
+      setFilteredJobs(filteredJobs);
+    }
+  };
+  
+  
+
+  const addFilter = () => {
+    const value = filter.trim();
+    if (value !== '' && !selectedFilters.includes(value)) {
+      applyFilter(value);
+    }
+  };
+  
 
   return (
     <main>
+      <div className='containerHeader' >
+        <img src="/images/bg-header-desktop.svg" alt="" style={{ width: '100%' }} />
+        <div className='containerFilter'>
+          {selectedFilters.length != 0 ?
+            <div className='filters'>
+              {selectedFilters.map((filter, index) => (
+                <Tag
+                  size='sm'
+                  key={index}
+                  borderRadius='full'
+                  variant='solid'
+                  colorScheme='cyan'
+                  mr={2}
+                >
+                  <TagLabel p={1}>{filter}</TagLabel>
+                  <TagCloseButton onClick={() => removeFilter(filter)} />
+                </Tag>
+              ))}
+            </div> :
+            <></>
+          }
 
+          <input
+            type='text'
+            name='filter'
+            value={filter}
+            onChange={handleFilterChange}
+            // onKeyDown={handleFilterChange}
+            placeholder='Filtrar por posición o lenguaje'
+          />
+          <Button colorScheme='teal' onClick={addFilter} p={0}>
+            <img src="/images/search-svgrepo-com.svg" alt="" width={35} />
+          </Button>
+        </div>
+
+      </div>
       {
-        jobs.map((job, i) => (
+        filteredJobs.map((job, i) => (
           <div key={i} className='container' >
             <Card className='card'
               overflow='hidden'
@@ -68,7 +154,7 @@ function App() {
 
                   </div>
 
-                  <Heading size='md' pb={2} pt={2}>{job.position}</Heading>
+                  <Heading size='md' pb={2} pt={2} className='jobPosition'>{job.position}</Heading>
                   <div className="list">
                     <p>{job.postedAt}</p>
                     <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#787878">
