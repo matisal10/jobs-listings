@@ -17,6 +17,8 @@
   flex-wrap: nowrap;
   justify-content: center;
   align-items: center;
+  position: fixed;
+  z-index: 1000;
 }
 
 .containerFilter {
@@ -54,6 +56,7 @@ input {
 
 .container {
   min-width: 70%;
+  margin-top: 200px;
 }
 
 .list {
@@ -134,7 +137,7 @@ input {
   }
 
   .container {
-    margin-top: 10px;
+    margin-top: 150px;
   }
 
   .filters>span {
