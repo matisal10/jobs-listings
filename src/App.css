@@ -97,6 +97,15 @@ input {
   padding: 0px 2px;
 }
 
+.languaje{
+  cursor: pointer;
+}
+
+.languaje:hover{
+  color: white;
+  background-color: teal;
+}
+
 @media (width < 900px) {
 
   .container {

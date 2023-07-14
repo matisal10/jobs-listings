@@ -47,29 +47,35 @@ function App() {
         )
     );
     setFilteredJobs(filteredJobs);
-    if (!selectedFilters.includes(value)) {
-      setSelectedFilters([...selectedFilters, value.toUpperCase()]);
+  
+    if (!selectedFilters.includes(value.toUpperCase())) {
+      setSelectedFilters((prevFilters) => [...prevFilters, value.toUpperCase()]);
     }
+  
     setFilter('');
   };
+  
+  
 
   const removeFilter = (filter) => {
-    const updatedFilters = selectedFilters.filter((f) => f !== filter);
+    const updatedFilters = selectedFilters.filter(
+      (f) => f.toLowerCase() !== filter.toLowerCase()
+    );
     setSelectedFilters(updatedFilters);
-
+  
     if (updatedFilters.length === 0) {
       setFilteredJobs(jobs);
     } else {
       const filteredJobs = jobs.filter((job) =>
         updatedFilters.some((f) =>
-          f === job.position || job.languages.includes(f)
+          f.toLowerCase() === job.position.toLowerCase() ||
+          job.languages.map((language) => language.toLowerCase()).includes(f.toLowerCase())
         )
       );
       setFilteredJobs(filteredJobs);
     }
   };
-
-
+  
 
   const addFilter = () => {
     const value = filter.trim();
@@ -108,7 +114,7 @@ function App() {
             name='filter'
             value={filter}
             onChange={handleFilterChange}
-            // onKeyDown={handleFilterChange}
+            onKeyDown={handleFilterChange}
             placeholder='Filtrar por posición o lenguaje'
           />
           <Button colorScheme='teal' onClick={addFilter} p={0}>
@@ -169,7 +175,7 @@ function App() {
                   <div>
                     <HStack spacing={4}>
                       {job.languages.map((l, k) => (
-                        <Tag size={'md'} key={k} variant='solid' colorScheme='teal'>
+                        <Tag onClick={()=>applyFilter(l)} className='languaje' size={'md'} key={k} variant='outline' colorScheme='teal'>
                           {l}
                         </Tag>
                       ))}
